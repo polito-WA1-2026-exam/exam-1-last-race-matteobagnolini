@@ -28,10 +28,10 @@ def populate_database(db_name="last_race.db"):
         CREATE TABLE IF NOT EXISTS connections (
             startingStationId INTEGER,
             arrivingStationId INTEGER,
-            metroLinedId INTEGER,
+            metroLineId INTEGER,
             FOREIGN KEY(startingStationId) REFERENCES stations(stationId),
             FOREIGN KEY(arrivingStationId) REFERENCES stations(stationId),
-            FOREIGN KEY(metroLinedId) REFERENCES metroLines(lineId)
+            FOREIGN KEY(metroLineId) REFERENCES metroLines(lineId)
         );
 
         CREATE TABLE IF NOT EXISTS events (
@@ -42,10 +42,14 @@ def populate_database(db_name="last_race.db"):
 
         CREATE TABLE IF NOT EXISTS games (
             gameId INTEGER PRIMARY KEY AUTOINCREMENT,
-            score INTEGER NOT NULL,
             userId INTEGER,
-            FOREIGN KEY(userId) REFERENCES users(userId)
-        );
+            startingStationId INTEGER,
+            destinationStationId INTEGER,
+            status TEXT NOT NULL CHECK (status IN ('pending', 'completed')),
+            score INTEGER NOT NULL,
+            FOREIGN KEY(userId) REFERENCES users(userId),
+            FOREIGN KEY(startingStationId) REFERENCES stations(stationId),
+            FOREIGN KEY(destinationStationId) REFERENCES stations(stationId));
     """)
 
     # 2. Define the Network Data
@@ -94,13 +98,13 @@ def populate_database(db_name="last_race.db"):
 
             # Insert Forward Direction
             cursor.execute("""
-                INSERT INTO connections (startingStationId, arrivingStationId, metroLinedId) 
+                INSERT INTO connections (startingStationId, arrivingStationId, metroLineId) 
                 VALUES (?, ?, ?)
             """, (id_a, id_b, line_id))
 
             # Insert Reverse Direction
             cursor.execute("""
-                INSERT INTO connections (startingStationId, arrivingStationId, metroLinedId) 
+                INSERT INTO connections (startingStationId, arrivingStationId, metroLineId) 
                 VALUES (?, ?, ?)
             """, (id_b, id_a, line_id))
 
@@ -127,7 +131,7 @@ def populate_database(db_name="last_race.db"):
         events_data
     )
     
-    # 5. Insert Users (At least 3 users)
+    # 6. Insert Users (At least 3 users)
     print("Populating users...")
     users_data = [
         ("torino_runner", "f9e8ea94aa1c655ecb413c67a418c46c9849f3eb0f0c5d493adae662e78175d1a8b63ae2dc925084acc4132d3e247092c86b7d269a586e72eb53bdabb52a33c8", "fc36a591fcdc5b3c"),
@@ -144,24 +148,24 @@ def populate_database(db_name="last_race.db"):
     cursor.execute("SELECT username, userId FROM users")
     user_map = dict(cursor.fetchall())
 
-    # 6. Insert Games (At least 2 of the registered users have played)
-    print("Populating games...")
+    # 7. Insert Games with updated schema (Mapping users, stations, status, and scores)
+    print("Populating updated games table...")
     games_data = [
-        # 'torino_runner' plays 2 games
-        (10, user_map["torino_runner"]),
-        (24, user_map["torino_runner"]),
+        # 'torino_runner' completed a cross-city run
+        (user_map["torino_runner"], station_map["Piazza Statuto"], station_map["Lingotto"], "completed", 24),
         
-        # 'mole_explorer' plays 1 game
-        (0, user_map["mole_explorer"])
+        # 'torino_runner' has an ongoing active game
+        (user_map["torino_runner"], station_map["Porta Susa"], station_map["Mole Antonelliana"], "completed", 10),
         
-        # 'piazza_walker' hasn't played any games yet
+        # 'mole_explorer' completed a park-to-park run
+        (user_map["mole_explorer"], station_map["Stadio Olimpico"], station_map["Parco del Valentino"], "completed", 0)
     ]
 
-    cursor.executemany(
-        "INSERT INTO games (score, userId) VALUES (?, ?)", 
-        games_data
-    )
-
+    cursor.executemany("""
+        INSERT INTO games (userId, startingStationId, destinationStationId, status, score) 
+        VALUES (?, ?, ?, ?, ?)
+    """, games_data)
+    
     # Commit and close
     conn.commit()
     conn.close()
