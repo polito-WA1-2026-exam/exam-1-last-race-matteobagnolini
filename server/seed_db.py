@@ -130,9 +130,9 @@ def populate_database(db_name="last_race.db"):
     # 5. Insert Users (At least 3 users)
     print("Populating users...")
     users_data = [
-        ("torino_runner", "mock_hashed_password_123", "random_salt_xyz"),
-        ("mole_explorer", "mock_hashed_password_456", "random_salt_abc"),
-        ("piazza_walker", "mock_hashed_password_789", "random_salt_ghi")
+        ("torino_runner", "f9e8ea94aa1c655ecb413c67a418c46c9849f3eb0f0c5d493adae662e78175d1a8b63ae2dc925084acc4132d3e247092c86b7d269a586e72eb53bdabb52a33c8", "fc36a591fcdc5b3c"),
+        ("mole_explorer", "659f837c314fd0ca2d014b30601e4d99c36e48aaef45ceeb31af1f6884139c8ba2b45101d62932b91a61db9ceb4645a54d6ed1d9606fd4ffc671bf29913351dc", "2bccaf5de0e56826"),
+        ("piazza_walker", "8cb24c3e59efb43ac1eb023f37d22256abf2438b87e4a89b9bee5e3d40f383e1cda2d7cbeec51f8e25a071f5db09a7be5c5a3992f62901c12f672e04c0667368", "06366098eca19f57")
     ]
     
     cursor.executemany(
