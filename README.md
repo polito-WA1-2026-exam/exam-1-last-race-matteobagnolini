@@ -1,5 +1,5 @@
 # Exam #N: "Exam Title"
-## Student: s123456 LASTNAME FIRSTNAME 
+## Student: s360263 Bagnolini Matteo 
 
 ## React Client Application Routes
 
@@ -22,9 +22,12 @@
 
 ## Database Tables
 
-- Table `users` - contains xx yy zz
-- Table `something` - contains ww qq ss
-- ...
+- Table `users` - contains userId, username, hashedPassword, salt
+- Table `stations` - contains stationId, stationName
+- Table `metroLines` - contains lineId, lineName
+- Table `connections` - contains startingStationId, arrivingStationId, metroLinedId
+- Table `events` - contains eventId, description, coins
+- Table `games` - contains gameId, score, userId
 
 ## Main React Components
 
