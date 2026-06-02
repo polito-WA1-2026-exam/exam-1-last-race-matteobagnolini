@@ -3,9 +3,12 @@
 
 ## React Client Application Routes
 
-- Route `/`: page content and purpose
-- Route `/something/:param`: page content and purpose, param specification
-- ...
+- Route `/`: unauthenticated user homepage, with game instruction and the possibility to browse to the login page. If the user is logged in, it also allows to play a new game.
+- Route `/login`: login page.
+- Route `/logout`: logout user.
+- Route `/play`: route to start a new game.
+- Route `/ranking`: display the live ranking of players.
+- Route `/*`: fallback route for 404 not found.
 
 ## API Server
 
