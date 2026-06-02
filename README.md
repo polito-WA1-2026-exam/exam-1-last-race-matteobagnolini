@@ -31,7 +31,7 @@
     - Status codes: `200 OK`, `400 Bad Request`, `401 Unauthorized` , `500 Internal Server Error`
 
 - GET `/api/session/current`
-    - Description: return information about the current logged user.
+    - Description: return information about the current logged user. User must be authenticated.
     - Response body:
     ```json
     {
@@ -42,13 +42,13 @@
     - Status codes: `200 OK`, `401 Unauthorized`, `500 Internal Server Error`
 
 - POST `/api/session/logout`
-    - Description: logout the current logged user.
+    - Description: logout the current logged user. User must be authenticated.
     - Status codes: `200 OK`, `401 Unauthorized`, `500 Internal Server Error`
 
 ### Stations
 
 - GET `/api/stations`
-    - Description: return a list of all available stations
+    - Description: return a list of all available stations. User must be authenticated.
     - Response body:
     ```json
     [
@@ -67,7 +67,7 @@
 ### Metro Lines
 
 - GET `/api/lines`
-    - Description: return a list of all available metro lines
+    - Description: return a list of all available metro lines. User must be authenticated.
     - Response body:
     ```json
     [
@@ -86,7 +86,7 @@
 ### Connections
 
 - GET `/api/connections`
-    - Description: return a list of connections between any two stations
+    - Description: return a list of connections between any two stations. User must be authenticated.
     - Response body:
     ```json
     [
@@ -99,10 +99,21 @@
     ```
     - Status codes: `200 OK`, `401 Unauthorized`, `500 Internal Server Error`
 
-### Route
+### Games
 
-- POST `/api/route`
-    - Description: sends a user created route, which is an ordered list of stations. The response contains if the route is valid/invalid, the final score and an ordered list of the corresponding events.
+- POST `/api/games/setup`
+    - Description: setup a new game, returning an object with the starting station and destination station. User must be authenticated.
+    - Response body:
+    ```json
+    {
+        "startingStationId": "1",
+        "destinationStationId": "5",
+    }
+    ```
+    - Status codes: `201 Created`, `401 Unauthorized`, `500 Internal Server Error`
+
+- POST `/api/games/:gameId/route`
+    - Description: sends a user created route, which is an ordered list of stations. The response contains if the route is valid/invalid, the final score and an ordered list of the corresponding events. The game represented by gameId is expected to be in the `pending` status (i.e., not completed yet).  User must be authenticated.
     - Request body:
     ```json
     [
@@ -128,23 +139,10 @@
         ]
     }
     ```
-    - Status codes: `200 OK`, `400 Bad Request`, `401 Unauthorized`, `500 Internal Server Error`
-
-### Games
-
-- POST `/api/games/setup`
-    - Description: setup a new game, returning an object with the starting station and destination station.
-    - Response body:
-    ```json
-    {
-        "startingStationId": "1",
-        "destinationStationId": "5",
-    }
-    ```
-    - Status codes: `201 Created`, `401 Unauthorized`, `500 Internal Server Error`
+    - Status codes: `200 OK`, `400 Bad Request`, `401 Unauthorized`, `404 Not Found` (if `gameId` refers to a game not created by the currently logged in user), `500 Internal Server Error`
 
 - GET `/api/games/scores`
-    - Description: returns a list of objects representing the best score for each user.
+    - Description: returns a list of objects representing the best score for each user. User must be authenticated.
     - Response body:
     ```json
     [
