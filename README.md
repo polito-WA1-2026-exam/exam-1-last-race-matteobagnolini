@@ -41,7 +41,7 @@
     ```
     - Status codes: `200 OK`, `401 Unauthorized`, `500 Internal Server Error`
 
-- POST `/api/session/logout`
+- DELETE `/api/session/logout`
     - Description: logout the current logged user. User must be authenticated.
     - Status codes: `200 OK`, `401 Unauthorized`, `500 Internal Server Error`
 
