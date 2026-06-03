@@ -137,7 +137,7 @@
             {
                 "eventId": "1",
                 "description": "Pickpocketed near Piazza Castello! You lost your emergency stash.",
-                "coin": -4
+                "coins": -4
             }
         ]
     }

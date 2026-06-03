@@ -59,7 +59,6 @@ export const evaluateRoute = (game, connections, availableEvents, route) => {
   let finalScore = 20;
   const triggeredEvents = [];
   const visitedSegments = new Set();
-  let currentLineId = null;
 
   if (String(route[0].stationId) !== String(game.startingStationId) || 
       String(route[route.length - 1].stationId) !== String(game.destinationStationId)) {
@@ -72,7 +71,7 @@ export const evaluateRoute = (game, connections, availableEvents, route) => {
       const toId = String(route[i + 1].stationId);
       const segmentKey = [fromId, toId].sort().join('-');
       
-      if (visitedSegments.has(segmentKey)) {
+      if (visitedSegments.has(segmentKey)) {    // each segment (connection) can be used at most 1 time
         isValid = false;
         break;
       }
@@ -83,7 +82,7 @@ export const evaluateRoute = (game, connections, availableEvents, route) => {
         (String(c.startingStationId) === toId && String(c.arrivingStationId) === fromId)
       );
 
-      if (validConnections.length === 0) {
+      if (validConnections.length === 0) {  // check if the connection exists
         isValid = false;
         break;
       }
@@ -108,12 +107,12 @@ export const evaluateRoute = (game, connections, availableEvents, route) => {
       }
 
       const randomEvent = availableEvents[Math.floor(Math.random() * availableEvents.length)];
-      const eventEffect = randomEvent.effect !== undefined ? randomEvent.effect : randomEvent.coins; 
+      const eventEffect = randomEvent.coins; 
       
       triggeredEvents.push({
         eventId: String(randomEvent.id),
         description: randomEvent.description,
-        coin: eventEffect 
+        coins: eventEffect
       });
       
       finalScore += eventEffect;
