@@ -1,0 +1,61 @@
+@baseUrl = http://localhost:3001/api
+
+### 1. Login User
+# @name login
+POST {{baseUrl}}/session/login
+Content-Type: application/json
+
+{
+    "username": "torino_runner",
+    "password": "password123!"
+}
+
+### 2. Get Current Session
+# Validates that the cookie was set and the user is authenticated
+GET {{baseUrl}}/session/current
+
+### 3. Get All Stations
+GET {{baseUrl}}/stations
+
+### 4. Get All Metro Lines
+GET {{baseUrl}}/lines
+
+### 5. Get All Connections
+GET {{baseUrl}}/connections
+
+### 6. Setup a New Game
+# @name setupGame
+POST {{baseUrl}}/games/setup
+
+### 7. Submit a Route for a Game
+# Note: Replace <YOUR_GAME_ID> with the actual gameId returned from the Setup request above.
+# Replace the stationIds with a valid connected sequence based on your DB.
+POST {{baseUrl}}/games/35/route
+Content-Type: application/json
+
+[
+    {
+        "stationId": "13"
+    },
+    {
+        "stationId": "4"
+    },
+    {
+        "stationId": "12"
+    },
+    {
+        "stationId": "11"
+    },
+    {
+        "stationId": "10"
+    }
+]
+
+### 8. Get Best Scores
+GET {{baseUrl}}/games/scores
+
+### 9. Logout
+DELETE {{baseUrl}}/session/logout
+
+### 10. Verify Logout (Should fail with 401 Unauthorized)
+GET {{baseUrl}}/session/current
