@@ -87,25 +87,6 @@ export const evaluateRoute = (game, connections, availableEvents, route) => {
         break;
       }
 
-      const linesForSegment = validConnections.map(c => String(c.lineId));
-      
-      if (currentLineId !== null && !linesForSegment.includes(currentLineId)) {
-        const distinctLinesAtStation = new Set();
-        connections.forEach(c => {
-          if (String(c.startingStationId) === fromId || String(c.arrivingStationId) === fromId) {
-            distinctLinesAtStation.add(String(c.lineId));
-          }
-        });
-
-        if (distinctLinesAtStation.size < 2) {
-          isValid = false;
-          break;
-        }
-        currentLineId = linesForSegment[0];
-      } else if (currentLineId === null) {
-        currentLineId = linesForSegment[0];
-      }
-
       const randomEvent = availableEvents[Math.floor(Math.random() * availableEvents.length)];
       const eventEffect = randomEvent.coins; 
       
