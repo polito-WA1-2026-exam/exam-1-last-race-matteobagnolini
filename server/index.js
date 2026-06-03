@@ -80,7 +80,7 @@ app.get('/api/sessions/current', isLoggedIn, (req, res) => {
 });
 
 // DELETE /api/session/logout
-app.delete('/api/sessions/current', isLoggedIn, (req, res) => {
+app.delete('/api/sessions/current', (req, res) => {
   req.logout(() => {
     res.status(200).end();
   });

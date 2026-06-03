@@ -45,7 +45,7 @@
     - Status codes: `200 OK`, `401 Unauthorized`, `500 Internal Server Error`
 
 - DELETE `/api/session/current`
-    - Description: logout the current logged user. User must be authenticated.
+    - Description: logout the current logged user.
     - Status codes: `200 OK`, `401 Unauthorized`, `500 Internal Server Error`
 
 ### Stations
