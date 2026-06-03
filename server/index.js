@@ -69,18 +69,18 @@ const isLoggedIn = (req, res, next) => {
 // --- Authentication ---
 
 // POST /api/session/login
-app.post('/api/session/login', passport.authenticate('local'), (req, res) => {
+app.post('/api/sessions', passport.authenticate('local'), (req, res) => {
   // If we reach here, authentication succeeded
   res.status(200).json({ userId: req.user.id, username: req.user.username });
 });
 
 // GET /api/session/current
-app.get('/api/session/current', isLoggedIn, (req, res) => {
+app.get('/api/sessions/current', isLoggedIn, (req, res) => {
   res.status(200).json({ userId: req.user.id, username: req.user.username });
 });
 
 // DELETE /api/session/logout
-app.delete('/api/session/logout', isLoggedIn, (req, res) => {
+app.delete('/api/sessions/current', isLoggedIn, (req, res) => {
   req.logout(() => {
     res.status(200).end();
   });

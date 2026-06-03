@@ -2,7 +2,7 @@
 
 ### 1. Login User
 # @name login
-POST {{baseUrl}}/session/login
+POST {{baseUrl}}/sessions
 Content-Type: application/json
 
 {
@@ -12,7 +12,7 @@ Content-Type: application/json
 
 ### 2. Get Current Session
 # Validates that the cookie was set and the user is authenticated
-GET {{baseUrl}}/session/current
+GET {{baseUrl}}/sessions/current
 
 ### 3. Get All Stations
 GET {{baseUrl}}/stations
@@ -30,24 +30,30 @@ POST {{baseUrl}}/games/setup
 ### 7. Submit a Route for a Game
 # Note: Replace <YOUR_GAME_ID> with the actual gameId returned from the Setup request above.
 # Replace the stationIds with a valid connected sequence based on your DB.
-POST {{baseUrl}}/games/35/route
+POST {{baseUrl}}/games/13/route
 Content-Type: application/json
 
 [
     {
-        "stationId": "13"
-    },
-    {
-        "stationId": "4"
+        "stationId": "11"
     },
     {
         "stationId": "12"
     },
     {
-        "stationId": "11"
+        "stationId": "4"
     },
     {
-        "stationId": "10"
+        "stationId": "3"
+    },
+    {
+        "stationId": "4"
+    },
+    {
+        "stationId": "7"
+    },
+    {
+        "stationId": "6"
     }
 ]
 
@@ -55,7 +61,7 @@ Content-Type: application/json
 GET {{baseUrl}}/games/scores
 
 ### 9. Logout
-DELETE {{baseUrl}}/session/logout
+DELETE {{baseUrl}}/sessions/current
 
 ### 10. Verify Logout (Should fail with 401 Unauthorized)
-GET {{baseUrl}}/session/current
+GET {{baseUrl}}/sessions/current

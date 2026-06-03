@@ -14,7 +14,7 @@
 
 ### Authentication
 
-- POST `/api/session/login`
+- POST `/api/sessions`
 
     - Description: perform the login of a user.
     - Request body:
@@ -33,7 +33,7 @@
     ```
     - Status codes: `200 OK`, `400 Bad Request`, `401 Unauthorized` , `500 Internal Server Error`
 
-- GET `/api/session/current`
+- GET `/api/sessions/current`
     - Description: return information about the current logged user. User must be authenticated.
     - Response body:
     ```json
@@ -44,7 +44,7 @@
     ```
     - Status codes: `200 OK`, `401 Unauthorized`, `500 Internal Server Error`
 
-- DELETE `/api/session/logout`
+- DELETE `/api/session/current`
     - Description: logout the current logged user. User must be authenticated.
     - Status codes: `200 OK`, `401 Unauthorized`, `500 Internal Server Error`
 
