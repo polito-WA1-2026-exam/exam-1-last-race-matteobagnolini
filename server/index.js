@@ -162,7 +162,6 @@ app.post('/api/games/:gameId/route', isLoggedIn, async (req, res) => {
 
     const connections = await dao.getConnections();
     const availableEvents = await dao.getEvents();
-    console.log("evaluating route");
     const evaluationRes = gameService.evaluateRoute(game, connections, availableEvents, route);
 
     const isValid = evaluationRes.valid;
