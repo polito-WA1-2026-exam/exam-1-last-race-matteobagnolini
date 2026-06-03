@@ -35,7 +35,6 @@ function App() {
 
   return (
     <UserContext.Provider value={user}>
-      <Container>
         <Routes>
           <Route path='/' element={<MainLayout doLogin={doLogin} />}>
             <Route index element={<LoginView />} />
@@ -43,7 +42,6 @@ function App() {
             <Route path='logout' element={<Logout doLogin={doLogin} />} />
           </Route>
         </Routes>
-      </Container>
     </UserContext.Provider>
   )
 
