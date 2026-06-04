@@ -91,7 +91,7 @@ export const evaluateRoute = (game, connections, availableEvents, route) => {
       const eventEffect = randomEvent.coins; 
       
       triggeredEvents.push({
-        eventId: String(randomEvent.id),
+        eventId: String(randomEvent.eventId),
         description: randomEvent.description,
         coins: eventEffect
       });
