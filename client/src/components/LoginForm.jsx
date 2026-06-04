@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { checkSession, doLogin, doLogout } from "../api/auth"
 import { useNavigate } from "react-router"
-import { Form, Button, Container } from "react-bootstrap"
+import { Form, Button, Container, Alert } from "react-bootstrap"
 
 function LoginForm(props) {
 
@@ -15,20 +15,22 @@ function LoginForm(props) {
         setErrormsg('')
 
         try {
-            // validations ...
             const user = await doLogin(username, password)
             props.doLogin(user)
-            const res = await checkSession();
-            console.log(res);
         } catch (ex) {
             setErrormsg(ex.message)
-            setTimeout(() => setErrormsg(''), 3000)
         }
     }
 
     return (
         <Container>
             <h2>Please login</h2>
+
+            {errormsg && (
+                <Alert variant="danger" dismissible onClose={() => setErrormsg('')}>
+                    {errormsg}
+                </Alert>
+            )}
 
             <Form onSubmit={doSubmit}>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -42,7 +44,7 @@ function LoginForm(props) {
                 </Form.Group>
                 <Button variant="primary" type="submit">
                     Log in
-                </Button> {errormsg && <div className="text-danger">{errormsg}</div>}
+                </Button>
             </Form>
         </Container>
     );
