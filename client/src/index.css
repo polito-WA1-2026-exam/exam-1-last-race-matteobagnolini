@@ -1,0 +1,52 @@
+:root {
+  --bs-primary: #e11d48;
+  --bs-primary-rgb: 225, 29, 72;
+  --bs-body-bg: #fdfcfc;
+  --bs-body-color: #334155;
+  --header-bg: #1e293b;
+  --bs-border-radius: 12px;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.text-primary { color: var(--bs-primary) !important; }
+.bg-primary { background-color: var(--bs-primary) !important; }
+
+.btn-primary {
+  --bs-btn-bg: var(--bs-primary);
+  --bs-btn-border-color: var(--bs-primary);
+  --bs-btn-hover-bg: #be123c;
+  padding: 0.6rem 1.75rem;
+  border-radius: 8px;
+}
+
+.card {
+  border: 1px solid #f1f5f9;
+  border-radius: var(--bs-border-radius);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.navbar {
+  background-color: var(--header-bg) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand, .nav-link, .btn-outline-light {
+  color: #fff !important;
+}
+
+.btn-outline-light {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-outline-light:hover {
+  background: #fff;
+  color: var(--header-bg) !important;
+}
+
+.table-success {
+  --bs-table-bg: #fff1f2;
+  --bs-table-color: var(--bs-primary);
+}

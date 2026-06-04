@@ -47,41 +47,47 @@ function Ranking() {
                     {error && <Alert variant="danger">{error}</Alert>}
 
                     {!loading && !error && (
-                        <Table striped bordered hover responsive className="text-center mb-0">
-                            <thead className="table-dark">
-                                <tr>
-                                    <th className="py-3">Rank</th>
-                                    <th className="py-3">Player (Username)</th>
-                                    <th className="py-3">Best Score (Coins)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {rankings.map((entry, index) => (
-                                    <tr key={index} className={entry.username === user.username ? "table-success" : ""}>
-                                        <td className="align-middle fw-bold">
-                                            {index + 1}
-                                        </td>
-                                        <td className="align-middle">
-                                            {entry.username} {entry.username === user.username && "(You)"}
-                                        </td>
-                                        <td className="align-middle fw-semibold">
-                                            {entry.bestScore}
-                                        </td>
-                                    </tr>
-                                ))}
-                                {rankings.length === 0 && (
-                                    <tr>
-                                        <td colSpan="3" className="py-4 text-muted">
-                                            No scores have been recorded yet. Be the first to play!
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </Table>
+                        <ScoreTable rankings={rankings} user={user} />
                     )}
                 </Card.Body>
             </Card>
         </Container>
+    );
+}
+
+function ScoreTable({ rankings, user }) {
+    return (
+        <Table striped bordered hover responsive className="text-center mb-0">
+            <thead className="table-dark">
+                <tr>
+                    <th className="py-3">Rank</th>
+                    <th className="py-3">Player (Username)</th>
+                    <th className="py-3">Best Score (Coins)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {rankings.map((entry, index) => (
+                    <tr key={index} className={entry.username === user.username ? "table-primary fw-bold" : ""}>
+                        <td className="align-middle fw-bold">
+                            {index + 1}
+                        </td>
+                        <td className="align-middle">
+                            {entry.username} {entry.username === user.username && "(You)"}
+                        </td>
+                        <td className="align-middle fw-semibold">
+                            {entry.bestScore}
+                        </td>
+                    </tr>
+                ))}
+                {rankings.length === 0 && (
+                    <tr>
+                        <td colSpan="3" className="py-4 text-muted">
+                            No scores have been recorded yet. Be the first to play!
+                        </td>
+                    </tr>
+                )}
+            </tbody>
+        </Table>
     );
 }
 
