@@ -33,7 +33,7 @@ const getDistances = (startId, connections) => {
 
 // Core Game Functions
 
-export const setupGame = async (stations, connections) => {
+export const setupGame = (stations, connections) => {
   if (stations.length < 2) {
     throw new Error('Not enough stations available');
   }

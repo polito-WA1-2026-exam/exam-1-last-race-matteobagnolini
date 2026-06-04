@@ -125,7 +125,7 @@ app.post('/api/games/setup', isLoggedIn, async (req, res) => {
   try {
     const stations = await dao.getStations();
     const connections = await dao.getConnections();
-    const { startingStationId, destinationStationId } = await gameService.setupGame(stations, connections);
+    const { startingStationId, destinationStationId } = gameService.setupGame(stations, connections);
     const gameId = await dao.createGame(req.user.id, startingStationId, destinationStationId);
     const gameData = { gameId: gameId, startingStationId: startingStationId, destinationStationId: destinationStationId }
     res.status(201).json(gameData);
