@@ -39,17 +39,17 @@ export const setupGame = (stations, connections) => {
   }
 
   const startIdx = Math.floor(Math.random() * stations.length);
-  const startingStationId = stations[startIdx].id;
+  const startingStationId = stations[startIdx].stationId;
 
   const distances = getDistances(startingStationId, connections);
-  const validDestinations = stations.filter(s => distances[String(s.id)] >= 3);
+  const validDestinations = stations.filter(s => distances[String(s.stationId)] >= 3);
   
   if (validDestinations.length === 0) {
     throw new Error('Network configuration does not support a path of length >= 3');
   }
 
   const destIdx = Math.floor(Math.random() * validDestinations.length);
-  const destinationStationId = validDestinations[destIdx].id;
+  const destinationStationId = validDestinations[destIdx].stationId;
 
   return { startingStationId, destinationStationId };
 };
