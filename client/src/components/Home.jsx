@@ -34,9 +34,9 @@ function Home() {
               variant="primary" 
               size="lg" 
               className="px-5 shadow-sm"
-              onClick={() => navigate('/login')}
+              onClick={() => {!user.id ? navigate('/login') : navigate('/play') }}
             >
-              Log In to Play
+              { !user.id ? "Log In to Play" : "New Game"}
             </Button>
           </div>
         </Col>
