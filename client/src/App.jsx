@@ -13,6 +13,7 @@ import Header from './components/Header.jsx';
 import { LoginForm, Logout } from './components/LoginForm.jsx';
 import Home from './components/Home.jsx'
 import Ranking from './components/Ranking.jsx';
+import NotFound from './components/NotFound.jsx';
 
 function App() {
   
@@ -20,7 +21,6 @@ function App() {
 
   const [user, setUser] = useState( { id: undefined, username: undefined } );
 
-  // Login action handler
   const doLogin = (newUser) => {
     setUser({ id: newUser.userId, username: newUser.username });
     navigate('/');
@@ -34,6 +34,7 @@ function App() {
             <Route path='login' element={<LoginForm doLogin={doLogin} />} />
             <Route path='logout' element={<Logout doLogin={doLogin} />} />
             <Route path='ranking' element={<Ranking />} />
+            <Route path='*' element={<NotFound />} />
           </Route>
         </Routes>
     </UserContext.Provider>
