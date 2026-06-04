@@ -119,14 +119,17 @@
     - Description: sends a user created route, which is an ordered list of stations. The response contains if the route is valid/invalid, the final score and an ordered list of the corresponding events. The game represented by gameId is expected to be in the `pending` status (i.e., not completed yet).  User must be authenticated.
     - Request body:
     ```json
-    [
-        {
-            "stationId": "1",
-        },
-        {
-            "stationId": "2",
-        }
-    ]
+    {
+     "route":
+        [
+            {
+                "stationId": "1"
+            },
+            {
+                "stationId": "2"
+            }
+        ]
+    }
     ```
     - Response body:
     ```json

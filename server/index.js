@@ -139,7 +139,9 @@ app.post('/api/games/setup', isLoggedIn, async (req, res) => {
 app.post('/api/games/:gameId/route', isLoggedIn, async (req, res) => {
   try {
     const gameId = req.params.gameId;
-    const route = req.body;
+    const route = req.body.route;
+
+    console.log(route);
 
     if (!Array.isArray(route) || route.length < 2) {
       await dao.updateGame(gameId, 'completed', 0);

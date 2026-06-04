@@ -30,32 +30,20 @@ POST {{baseUrl}}/games/setup
 ### 7. Submit a Route for a Game
 # Note: Replace <YOUR_GAME_ID> with the actual gameId returned from the Setup request above.
 # Replace the stationIds with a valid connected sequence based on your DB.
-POST {{baseUrl}}/games/13/route
+POST {{baseUrl}}/games/48/route
 Content-Type: application/json
-
-[
-    {
-        "stationId": "11"
-    },
-    {
-        "stationId": "12"
-    },
-    {
-        "stationId": "4"
-    },
-    {
-        "stationId": "3"
-    },
-    {
-        "stationId": "4"
-    },
-    {
-        "stationId": "7"
-    },
-    {
-        "stationId": "6"
-    }
-]
+    
+{
+     "route":
+    [
+        {
+            "stationId": "1"
+        },
+        {
+            "stationId": "2"
+        }
+    ]
+}
 
 ### 8. Get Best Scores
 GET {{baseUrl}}/games/scores
