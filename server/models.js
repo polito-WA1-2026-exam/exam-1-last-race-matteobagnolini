@@ -4,13 +4,13 @@ export function User(id, username) {
 }
 
 export function Station(id, name) {
-  this.id = id;
-  this.name = name;
+  this.stationId = id;
+  this.stationName = name;
 }
 
 export function Line(id, name) {
-  this.id = id;
-  this.name = name;
+  this.lineId = id;
+  this.lineName = name;
 }
 
 export function Connection(startingStationId, arrivingStationId, metroLineId) {
@@ -20,7 +20,7 @@ export function Connection(startingStationId, arrivingStationId, metroLineId) {
 }
 
 export function Event(id, description, coins) {
-  this.id = id;
+  this.eventId = id;
   this.description = description;
   this.coins = coins;
 }
