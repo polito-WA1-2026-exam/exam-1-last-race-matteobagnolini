@@ -14,6 +14,7 @@ import { LoginForm, Logout } from './components/LoginForm.jsx';
 import Home from './components/Home.jsx'
 import Ranking from './components/Ranking.jsx';
 import NotFound from './components/NotFound.jsx';
+import Play from './components/Play.jsx';
 
 function App() {
   
@@ -34,6 +35,7 @@ function App() {
             <Route path='login' element={<LoginForm doLogin={doLogin} />} />
             <Route path='logout' element={<Logout doLogin={doLogin} />} />
             <Route path='ranking' element={<Ranking />} />
+            <Route path='play' element={<Play />} />
             <Route path='*' element={<NotFound />} />
           </Route>
         </Routes>
