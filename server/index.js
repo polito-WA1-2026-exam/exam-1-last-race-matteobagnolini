@@ -141,8 +141,6 @@ app.post('/api/games/:gameId/route', isLoggedIn, async (req, res) => {
     const gameId = req.params.gameId;
     const route = req.body.route;
 
-    console.log(route);
-
     if (!Array.isArray(route) || route.length < 2) {
       await dao.updateGame(gameId, 'completed', 0);
       return res.status(400).json({ error: 'Invalid route format.' });
