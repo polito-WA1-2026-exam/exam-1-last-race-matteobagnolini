@@ -128,6 +128,20 @@ app.post('/api/games/setup', isLoggedIn, async (req, res) => {
     const { startingStationId, destinationStationId } = gameService.setupGame(stations, connections);
     const gameId = await dao.createGame(req.user.id, startingStationId, destinationStationId);
     const gameData = { gameId: gameId, startingStationId: startingStationId, destinationStationId: destinationStationId }
+
+    // Automatically set game to `complete` if more that 95s passes
+    // In this way, if a user exit the page, the game will be counted
+    setTimeout(async () => {
+      try {
+        const game = await dao.getGame(gameId);
+        if (game && game.status === 'pending') {
+          await dao.updateGame(gameId, 'completed', 0);
+        }
+      } catch (err) {
+        console.error(`Error during timeout cleanup for game ${gameId}:`, err);
+      }
+    }, 95000);
+
     res.status(201).json(gameData);
   } catch (err) {
     console.error(err);
