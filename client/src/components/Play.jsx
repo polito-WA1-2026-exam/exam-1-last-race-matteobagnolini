@@ -1,11 +1,11 @@
 import { useState, useEffect, useContext } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
 
 import UserContext from '../contexts/UserContext';
 
 import {  Alert, Spinner } from 'react-bootstrap'
 
-import { getStations, getConnections, setupGame, submitRoute } from '../api/api.js';
+import { getStations, getConnections, getLines, setupGame, submitRoute } from '../api/api.js';
 
 import NetworkDisplay from './NetworkDisplay.jsx';
 import GameSetup from './gameComponents/GameSetup.jsx';
@@ -24,6 +24,7 @@ function Play(props) {
   
   const [stations, setStations] = useState([]);
   const [connections, setConnections] = useState([]);
+  const [lines, setLines] = useState([])
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -33,10 +34,11 @@ function Play(props) {
 
   useEffect(() => {
     if (user?.id) {
-      Promise.all([getStations(), getConnections()])
-        .then(([stationsData, connectionsData]) => {
+      Promise.all([getStations(), getConnections(), getLines()])
+        .then(([stationsData, connectionsData, linesData]) => {
           setStations(stationsData);
           setConnections(connectionsData);
+          setLines(linesData);
           setLoading(false);
         })
         .catch(err => {
@@ -87,18 +89,29 @@ function Play(props) {
   }
 
   if (error) {
-    return <Alert variant="danger" className="m-4">Error: {error}</Alert>;
+    return (
+      <div className="m-4">
+        <Alert variant="danger">
+          <Alert.Heading>Oops! Something went wrong.</Alert.Heading>
+          <p>{error}</p>
+        </Alert>
+        <Link to="/" className="btn btn-primary">
+          Return to Home
+        </Link>
+      </div>
+    );
   }
 
   return <>
       <div>
         {phase === 'SETUP' && (
-          <GameSetup stations={stations} connections={connections} startGame={handleStartGame} />
+          <GameSetup stations={stations} connections={connections} lines={lines} startGame={handleStartGame} />
         )}
         {phase === 'PLANNING' && (
           <GamePlanning 
             stations={stations}
             connections={connections}
+            lines={lines}
             gameInfo={gameInfo} 
             onSubmit={handleRouteSubmit} 
           />

@@ -142,7 +142,7 @@ function GamePlanning(props) {
             <Button variant="warning" onClick={handleUndo} disabled={route.length <= 1}>
               Undo Last
             </Button>
-            <Button variant="success" onClick={() => onSubmit(route)}>
+            <Button variant="success" onClick={() => onSubmit(route)} disabled={route.length <= 1}>
               Submit Route
             </Button>
           </div>

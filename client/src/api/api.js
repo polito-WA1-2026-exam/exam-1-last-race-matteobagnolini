@@ -58,6 +58,26 @@ async function getConnections() {
     }
 }
 
+async function getLines() {
+    try {
+        const response = await fetch('http://localhost:3001/api/lines', {
+        method: 'GET',
+        credentials: 'include'
+    })
+
+        if (response.ok) {
+            const lines = await response.json()
+            return lines
+        } else {
+            // 4xx or 5xx status code
+            throw new Error('HTTP error in getQuestions, code=' + response.status)
+        }
+    } catch (ex) {
+        // handle network errors + parsing errors
+        throw new Error("Network error", { cause: ex })
+    }
+}
+
 async function setupGame() {
     try {
         const response = await fetch('http://localhost:3001/api/games/setup', {
@@ -104,4 +124,4 @@ async function submitRoute(gameId, route) {
     }
 }
 
-export { getScores, getStations, getConnections, setupGame, submitRoute }
+export { getScores, getStations, getConnections, getLines, setupGame, submitRoute }

@@ -18,7 +18,7 @@ function GameSetup(props) {
         </div>
 
         <div className="col-md-6">
-          <NetworkDisplay stations={props.stations} connections={props.connections} showEdges={true} />
+          <NetworkDisplay stations={props.stations} connections={props.connections} lines={props.lines} showEdges={true} />
         </div>
         
       </div>
