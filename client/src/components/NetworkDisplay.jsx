@@ -14,16 +14,26 @@ export default function NetworkDisplay(props) {
   // Color map for each line
   const lineColorMap = useMemo(() => {
     const map = {};
+      const predefinedColors = [
+      'rgba(231, 76, 60, 0.9)',  // Red
+      'rgba(52, 152, 219, 0.9)', // Blue
+      'rgba(46, 204, 113, 0.9)', // Green
+      'rgba(241, 196, 15, 0.9)'  // Yellow
+    ];
+
     if (lines) {
       lines.forEach((line, index) => {
-        // Space out the colors evenly across the color wheel
-        const hue = Math.floor((index * 137.5) % 360); 
-        map[line.lineId] = `hsla(${hue}, 80%, 50%, 0.8)`;
+        if (index < predefinedColors.length) {
+          map[line.lineId] = predefinedColors[index];
+        } else {
+          const randomHue = Math.floor(Math.random() * 360);
+          map[line.lineId] = `hsla(${randomHue}, 80%, 50%, 0.8)`;
+        }
       });
     }
     return map;
   }, [lines]);
-
+  
   // Created the structure to use with ForceGraph2D
   const graphData = useMemo(() => {
     const nodes = stations.map(station => {
@@ -38,7 +48,6 @@ export default function NetworkDisplay(props) {
     const seenLinks = new Set();
 
     connections.forEach(connection => {
-      // Normalize direction. Always draw from the smaller ID to the larger ID.
       const minId = Math.min(connection.startingStationId, connection.arrivingStationId);
       const maxId = Math.max(connection.startingStationId, connection.arrivingStationId);
       
@@ -82,12 +91,11 @@ export default function NetworkDisplay(props) {
   return (
     <div className="d-flex justify-content-center align-items-center">
       <div 
-        // ADDED: "position-relative" so the legend can be absolutely positioned inside this container
         className="position-relative border border-2 border-secondary rounded shadow-sm overflow-hidden"
         style={{ width: `${graphWidth}px`, height: `${graphHeight}px`, backgroundColor: '#f8f9fa' }}
       >
         
-        {/* --- LEGEND START --- */}
+        {/* Legend */}
         {lines && lines.length > 0 && (
           <div 
             className="position-absolute top-0 start-0 p-3 bg-white border-end border-bottom"
@@ -107,7 +115,6 @@ export default function NetworkDisplay(props) {
                       borderRadius: '50%'
                     }}
                   ></span>
-                  {/* Note: Change "line.lineName" if your line object uses a different property key for the name */}
                   <span style={{ fontSize: '13px', color: '#333' }}>
                     {line.lineName || `Line ${line.lineId}`}
                   </span>
@@ -116,8 +123,8 @@ export default function NetworkDisplay(props) {
             </ul>
           </div>
         )}
-        {/* --- LEGEND END --- */}
 
+        {/* Graph Network */}
         <ForceGraph2D
           width={graphWidth}
           height={graphHeight}
@@ -125,6 +132,7 @@ export default function NetworkDisplay(props) {
           linkVisibility={() => showEdges}
           linkColor={link => link.color}
           linkCurvature={link => link.curvature}
+          linkWidth={3}
           
           // Custom Canvas Rendering for Nodes + Text
           nodeCanvasObject={(node, ctx, globalScale) => {
@@ -134,17 +142,16 @@ export default function NetworkDisplay(props) {
             
             const nodeRadius = 5;
 
-            // 1. Draw the Node (Circle)
+            // Node
             ctx.beginPath();
             ctx.arc(node.x, node.y, nodeRadius, 0, 2 * Math.PI, false);
             ctx.fillStyle = node.color;
             ctx.fill();
 
-            // 2. Draw the Text Label
+            // Labels
             ctx.textAlign = 'center';
             ctx.textBaseline = 'bottom';
             ctx.fillStyle = '#333';
-            
             ctx.fillText(label, node.x, node.y - nodeRadius - (2 / globalScale));
           }}
         />
