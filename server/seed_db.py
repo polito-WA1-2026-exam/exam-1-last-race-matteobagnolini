@@ -158,7 +158,7 @@ def populate_database(db_name="last_race.db"):
         (user_map["torino_runner"], station_map["Porta Susa"], station_map["Mole Antonelliana"], "completed", 10),
         
         # 'mole_explorer' completed a park-to-park run
-        (user_map["mole_explorer"], station_map["Stadio Olimpico"], station_map["Parco del Valentino"], "completed", 0)
+        (user_map["mole_explorer"], station_map["Stadio Olimpico"], station_map["Parco del Valentino"], "completed", 12)
     ]
 
     cursor.executemany("""
