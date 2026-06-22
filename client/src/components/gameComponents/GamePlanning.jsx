@@ -57,8 +57,7 @@ function GamePlanning({ stations, connections, gameInfo, onSubmit }) {
       <div className="row align-items-center">
         
         {/* Route Planning Controls */}
-        {/* Replaced inline overflow/padding with Bootstrap's overflow-auto and pe-2 (padding-end) */}
-        <div className="col-md-6 overflow-auto pe-2 mb-4 mb-md-0" style={{ maxHeight: '75vh' }}>
+        <div className="col-md-6 overflow-auto pe-2 mb-4 mb-md-0" style={{ maxHeight: '100vh' }}>
           
           {/* Top Info & Timer */}
           <div className="mb-4">
