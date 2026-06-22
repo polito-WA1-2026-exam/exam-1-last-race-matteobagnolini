@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { useNavigate, Navigate } from 'react-router-dom';
 import UserContext from '../contexts/UserContext';
-import heroImg from '../assets/hero.png';
+import lastRaceImage from '../assets/LastRace.png';
 
 function Home() {
   const user = useContext(UserContext);
@@ -43,7 +43,7 @@ function Home() {
         
         <Col lg={6} className="text-center">
           <img 
-            src={heroImg}       // TODO: modify the image here
+            src={lastRaceImage}       // TODO: modify the image here
             alt="Last Race Hero Graphic" 
             className="img-fluid rounded shadow" 
             style={{ maxHeight: '450px', objectFit: 'cover' }}
