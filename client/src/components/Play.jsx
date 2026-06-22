@@ -111,7 +111,6 @@ function Play(props) {
           <GamePlanning 
             stations={stations}
             connections={connections}
-            lines={lines}
             gameInfo={gameInfo} 
             onSubmit={handleRouteSubmit} 
           />

@@ -1,156 +1,141 @@
 import { useState, useEffect } from 'react';
-import { Button, ProgressBar } from 'react-bootstrap';
-
+import { Button, ProgressBar, ListGroup } from 'react-bootstrap';
 import NetworkDisplay from '../NetworkDisplay';
 
-
-function GamePlanning(props) {
-  const { stations, gameInfo, onSubmit } = props;
-
+function GamePlanning({ stations, connections, gameInfo, onSubmit }) {
   const [timeLeft, setTimeLeft] = useState(90);
-  const [route, setRoute] = useState([gameInfo.startingStationId]);
-  
-  // States for the two dropdowns
-  const [segmentStart, setSegmentStart] = useState(gameInfo.startingStationId);
-  const [segmentEnd, setSegmentEnd] = useState("");
+  const [selectedSegments, setSelectedSegments] = useState([]);
 
-  // Timer logic
-  useEffect(() => {
-    if (timeLeft <= 0) {
-      onSubmit(route);
-      return;
-    }
-    const timerId = setInterval(() => setTimeLeft((t) => t - 1), 1000);
-    return () => clearInterval(timerId);
-  }, [timeLeft, route, onSubmit]);
-
-  // Keep the "From" dropdown in sync with the last station in the route array
-  useEffect(() => {
-    if (route.length > 0) {
-      setSegmentStart(route[route.length - 1]);
-    }
-  }, [route]);
-
-  // Helper function to get station names from IDs
   const getStationName = (id) => {
-    const station = stations.find(s => s.stationId === Number(id));
-    return station ? station.stationName : `Unknown (${id})`;
+    const stationId = typeof id === 'object' ? id.stationId || id.id : Number(id);
+    const station = stations.find(s => s.stationId === stationId);
+    return station ? station.stationName : `Unknown (${stationId})`;
+  };
+
+  const currentRouteIds = [gameInfo.startingStationId];
+  selectedSegments.forEach(seg => {
+    const lastId = currentRouteIds[currentRouteIds.length - 1];
+    if (seg.startingStationId === lastId) {
+      currentRouteIds.push(seg.arrivingStationId);
+    } else if (seg.arrivingStationId === lastId) {
+      currentRouteIds.push(seg.startingStationId);
+    } else {
+      currentRouteIds.push(seg.startingStationId, seg.arrivingStationId);
+    }
+  });
+
+  useEffect(() => {
+    if (timeLeft > 0) {
+      const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+      return () => clearTimeout(timerId);
+    } else {
+      onSubmit(currentRouteIds);
+    }
+  }, [timeLeft]);
+
+  const handleAddSegment = (conn) => {
+    setSelectedSegments([...selectedSegments, conn]);
+  };
+
+  const handleUndo = () => {
+    setSelectedSegments(selectedSegments.slice(0, -1));
+  };
+
+  const isSegmentSelected = (conn) => {
+    return selectedSegments.some(
+      (selected) => 
+        selected.startingStationId === conn.startingStationId && 
+        selected.arrivingStationId === conn.arrivingStationId
+    );
   };
 
   const startName = getStationName(gameInfo.startingStationId);
   const destName = getStationName(gameInfo.destinationStationId);
 
-  // Handle adding a new segment to the route without validating against existing connections
-  const handleAddSegment = () => {
-    if (!segmentStart || !segmentEnd) {
-      alert("Please select both a starting and destination station.");
-      return;
-    }
-
-    if (Number(segmentStart) !== route[route.length - 1]) {
-      alert("The start of your new segment must connect to the end of your current route!");
-      return;
-    }
-
-    if (segmentStart === segmentEnd) {
-      alert("Starting and destination stations cannot be the same.");
-      return;
-    }
-
-    // Add the new station ID to the continuous route array
-    setRoute([...route, Number(segmentEnd)]);
-    
-    // Reset the "To" dropdown for the next segment
-    setSegmentEnd("");
-  };
-
-  const handleUndo = () => {
-    if (route.length > 1) {
-      setRoute(route.slice(0, -1));
-    }
-  };
-
   return (
     <div className="container">
       <div className="row align-items-center">
         
-        <div className="col-md-6 text-start mb-4 mb-md-0">
-          <h4>Plan Your Route!</h4>
+        {/* Route Planning Controls */}
+        {/* Replaced inline overflow/padding with Bootstrap's overflow-auto and pe-2 (padding-end) */}
+        <div className="col-md-6 overflow-auto pe-2 mb-4 mb-md-0" style={{ maxHeight: '75vh' }}>
           
-          <p className="fs-5 mb-4">
-            From: <strong>{startName}</strong> <br />
-            To: <strong>{destName}</strong>
-          </p>
-          
-          <ProgressBar 
-            now={(timeLeft / 90) * 100} 
-            label={`${timeLeft}s`} 
-            variant={timeLeft < 15 ? 'danger' : 'primary'} 
-            className="mb-4 shadow-sm"
-            style={{ height: '24px', fontSize: '0.9rem' }}
-          />
-
-          {/* Current Route Display */}
-          <div className="mb-3 p-3 bg-light rounded border">
-            <h6 className="text-muted mb-2">Current Route:</h6>
-            <p className="text-primary fw-bold mb-0" style={{ wordWrap: 'break-word' }}>
-              {route.map(id => getStationName(id)).join(' ➔ ')}
+          {/* Top Info & Timer */}
+          <div className="mb-4">
+            <h4>Plan Your Route!</h4>
+            <p className="fs-5 mb-3">
+              From: <strong>{startName}</strong> <br />
+              To: <strong>{destName}</strong>
             </p>
+            <ProgressBar 
+              now={(timeLeft / 90) * 100} 
+              label={`${timeLeft}s`} 
+              variant={timeLeft < 15 ? 'danger' : 'primary'} 
+              style={{ height: '24px' }}
+            />
           </div>
 
-          {/* Two Dropdowns for Segment Selection */}
-          <div className="mb-4">
-            <div className="row g-2 mb-2">
-              <div className="col-md-6">
-                <label className="form-label text-muted small mb-1">From Station:</label>
-                <select 
-                  className="form-select" 
-                  value={segmentStart} 
-                  onChange={(e) => setSegmentStart(e.target.value)}
-                  disabled // Disabled to force a continuous route, but visible to the user
-                >
-                  {stations.map(station => (
-                    <option key={`start-${station.stationId}`} value={station.stationId}>
-                      {station.stationName}
-                    </option>
+          {/* Current Route List */}
+          {/* Swapped custom styling for a clean Bootstrap Card */}
+          <div className="card bg-light mb-3">
+            <div className="card-body p-3">
+              <h6 className="text-muted mb-2">Current Route:</h6>
+              {selectedSegments.length === 0 ? (
+                <span className="text-muted fst-italic">No segments added yet.</span>
+              ) : (
+                <ListGroup variant="flush" style={{ maxHeight: '120px', overflowY: 'auto' }}>
+                  {selectedSegments.map((seg, idx) => (
+                    <ListGroup.Item key={`route-seg-${idx}`} className="py-2 text-primary fw-bold bg-white border rounded mb-1 shadow-sm">
+                      {getStationName(seg.startingStationId)} ➔ {getStationName(seg.arrivingStationId)}
+                    </ListGroup.Item>
                   ))}
-                </select>
-              </div>
-              <div className="col-md-6">
-                <label className="form-label text-muted small mb-1">To Station:</label>
-                <select 
-                  className="form-select" 
-                  value={segmentEnd} 
-                  onChange={(e) => setSegmentEnd(e.target.value)}
-                >
-                  <option value="">-- Select Destination --</option>
-                  {stations.map(station => (
-                    <option key={`end-${station.stationId}`} value={station.stationId}>
-                      {station.stationName}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                </ListGroup>
+              )}
             </div>
-            <Button variant="primary" className="w-100 mt-2" onClick={handleAddSegment}>
-              Add Stop
-            </Button>
+          </div>
+
+          {/* Available Segments List */}
+          {/* Swapped custom wrapper for a Bootstrap Card, gave it a sensible maxHeight */}
+          <div className="card mb-4">
+            <div className="card-body p-3" style={{ maxHeight: '250px', overflowY: 'auto' }}>
+              <h6 className="text-muted mb-2">Available Segments:</h6>
+              {connections.map((conn, idx) => {
+                const isSelected = isSegmentSelected(conn);
+                const name1 = getStationName(conn.startingStationId);
+                const name2 = getStationName(conn.arrivingStationId);
+
+                return (
+                  <Button 
+                    key={`conn-${idx}`} 
+                    variant={isSelected ? "secondary" : "outline-primary"} 
+                    className="w-100 mb-2 d-flex justify-content-between align-items-center"
+                    disabled={isSelected}
+                    onClick={() => handleAddSegment(conn)}
+                  >
+                    <span>{name1} ➔ {name2}</span>
+                    {isSelected && <span className="badge bg-light text-secondary rounded-pill">Added</span>}
+                  </Button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="d-flex gap-2">
-            <Button variant="warning" onClick={handleUndo} disabled={route.length <= 1}>
+          <div className="d-flex gap-2 mb-3">
+            <Button variant="warning" onClick={handleUndo} disabled={selectedSegments.length === 0}>
               Undo Last
             </Button>
-            <Button variant="success" onClick={() => onSubmit(route)} disabled={route.length <= 1}>
+            <Button variant="success" onClick={() => onSubmit(currentRouteIds)} disabled={selectedSegments.length === 0}>
               Submit Route
             </Button>
           </div>
         </div>
 
+        {/* Network Display */}
         <div className="col-md-6">
-          <NetworkDisplay stations={props.stations} connections={props.connections} showEdges={false} />
+          <NetworkDisplay stations={stations} connections={connections} showEdges={false} />
         </div>
+        
       </div>
     </div>
   );

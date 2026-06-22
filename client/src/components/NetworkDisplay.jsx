@@ -3,17 +3,14 @@ import { Container } from 'react-bootstrap';
 import { Navigate } from 'react-router-dom';
 import ForceGraph2D from 'react-force-graph-2d';
 
-import UserContext from '../contexts/UserContext';
-import { getStations, getConnections } from '../api/api.js';
+// Adjust these imports as needed for your actual project
+// import UserContext from '../contexts/UserContext';
+// import { getStations, getConnections } from '../api/api.js';
 
 export default function NetworkDisplay(props) {
-  const stations = props.stations;
-  const connections = props.connections;
-  const lines = props.lines;
-  const showEdges = props.showEdges;
+  const { stations, connections, lines, showEdges } = props;
 
   // Cached data with useMemo
-  
   // Color map for each line
   const lineColorMap = useMemo(() => {
     const map = {};
@@ -27,11 +24,9 @@ export default function NetworkDisplay(props) {
     return map;
   }, [lines]);
 
-
   // Created the structure to use with ForceGraph2D
   const graphData = useMemo(() => {
     const nodes = stations.map(station => {
-      const randHue = Math.floor(Math.random() * 360);
       return {
         id: station.stationId,
         name: station.stationName,
@@ -43,9 +38,7 @@ export default function NetworkDisplay(props) {
     const seenLinks = new Set();
 
     connections.forEach(connection => {
-      // 1. THE FIX: Normalize direction. Always draw from the smaller ID to the larger ID.
-      // This ensures 2->3 and 3->2 share the exact same underlying vector, 
-      // allowing opposite curvatures to properly push them apart.
+      // Normalize direction. Always draw from the smaller ID to the larger ID.
       const minId = Math.min(connection.startingStationId, connection.arrivingStationId);
       const maxId = Math.max(connection.startingStationId, connection.arrivingStationId);
       
@@ -63,10 +56,9 @@ export default function NetworkDisplay(props) {
       }
     });
 
-    // 2. Curvature logic
+    // Curvature logic
     const linkGroups = {};
     links.forEach(link => {
-      // We can use our normalized source/target directly now
       const segmentId = `${link.source}-${link.target}`;
       if (!linkGroups[segmentId]) {
         linkGroups[segmentId] = [];
@@ -77,8 +69,6 @@ export default function NetworkDisplay(props) {
     Object.values(linkGroups).forEach(group => {
       const count = group.length;
       group.forEach((link, i) => {
-        // I increased the multiplier from 0.2 to 0.4 so the gap between 
-        // the red and green lines is much more obvious!
         link.curvature = count === 1 ? 0 : (i - (count - 1) / 2) * 0.4;
       });
     });
@@ -92,9 +82,42 @@ export default function NetworkDisplay(props) {
   return (
     <div className="d-flex justify-content-center align-items-center">
       <div 
-        className="border border-2 border-secondary rounded shadow-sm overflow-hidden"
+        // ADDED: "position-relative" so the legend can be absolutely positioned inside this container
+        className="position-relative border border-2 border-secondary rounded shadow-sm overflow-hidden"
         style={{ width: `${graphWidth}px`, height: `${graphHeight}px`, backgroundColor: '#f8f9fa' }}
       >
+        
+        {/* --- LEGEND START --- */}
+        {lines && lines.length > 0 && (
+          <div 
+            className="position-absolute top-0 start-0 p-3 bg-white border-end border-bottom"
+            style={{ zIndex: 10, opacity: 0.9, borderBottomRightRadius: '8px' }}
+          >
+            <h6 className="mb-2 fw-bold text-muted" style={{ fontSize: '14px' }}>Metro Lines</h6>
+            <ul className="list-unstyled mb-0">
+              {lines.map((line) => (
+                <li key={line.lineId} className="d-flex align-items-center mb-1">
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      width: '12px',
+                      height: '12px',
+                      backgroundColor: lineColorMap[line.lineId],
+                      marginRight: '8px',
+                      borderRadius: '50%'
+                    }}
+                  ></span>
+                  {/* Note: Change "line.lineName" if your line object uses a different property key for the name */}
+                  <span style={{ fontSize: '13px', color: '#333' }}>
+                    {line.lineName || `Line ${line.lineId}`}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {/* --- LEGEND END --- */}
+
         <ForceGraph2D
           width={graphWidth}
           height={graphHeight}
