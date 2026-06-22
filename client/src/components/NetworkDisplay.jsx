@@ -3,10 +3,6 @@ import { Container } from 'react-bootstrap';
 import { Navigate } from 'react-router-dom';
 import ForceGraph2D from 'react-force-graph-2d';
 
-// Adjust these imports as needed for your actual project
-// import UserContext from '../contexts/UserContext';
-// import { getStations, getConnections } from '../api/api.js';
-
 export default function NetworkDisplay(props) {
   const { stations, connections, lines, showEdges } = props;
 
@@ -33,7 +29,7 @@ export default function NetworkDisplay(props) {
     }
     return map;
   }, [lines]);
-  
+
   // Created the structure to use with ForceGraph2D
   const graphData = useMemo(() => {
     const nodes = stations.map(station => {

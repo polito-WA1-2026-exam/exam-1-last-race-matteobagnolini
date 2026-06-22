@@ -75,7 +75,6 @@ function GamePlanning({ stations, connections, gameInfo, onSubmit }) {
           </div>
 
           {/* Current Route List */}
-          {/* Swapped custom styling for a clean Bootstrap Card */}
           <div className="card bg-light mb-3">
             <div className="card-body p-3">
               <h6 className="text-muted mb-2">Current Route:</h6>
@@ -94,7 +93,6 @@ function GamePlanning({ stations, connections, gameInfo, onSubmit }) {
           </div>
 
           {/* Available Segments List */}
-          {/* Swapped custom wrapper for a Bootstrap Card, gave it a sensible maxHeight */}
           <div className="card mb-4">
             <div className="card-body p-3" style={{ maxHeight: '250px', overflowY: 'auto' }}>
               <h6 className="text-muted mb-2">Available Segments:</h6>

@@ -80,7 +80,6 @@ function Play(props) {
     setPhase('SETUP');
   };
 
-
   if (loading) {
     return <div className="text-center my-5">
               <Spinner animation="border" variant="primary" />

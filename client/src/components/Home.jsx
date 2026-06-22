@@ -43,7 +43,7 @@ function Home() {
         
         <Col lg={6} className="text-center">
           <img 
-            src={lastRaceImage}       // TODO: modify the image here
+            src={lastRaceImage}
             alt="Last Race Hero Graphic" 
             className="img-fluid rounded shadow" 
             style={{ maxHeight: '450px', objectFit: 'cover' }}
